@@ -634,6 +634,16 @@ $R$ — коэффициент корреляции, $f_1$, $f_2$ — число
 
 
 
+[Линеаризация нелинейных моделей регрессии](https://spravochnick.ru/ekonomicheskiy_analiz/linearizaciya_nelineynyh_modeley_regressii/#linearizaciya-nelineynyh-modeley-regressii)
+
+
+
+
+
+
+
+
+
 
 
 
@@ -663,6 +673,64 @@ $R$ — коэффициент корреляции, $f_1$, $f_2$ — число
 С помощью обычного метода наименьших квадратов оценивается исходная линейная регрессионная модель:
 
 ![y_{t}=x_{t}^{T}b+\varepsilon _{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/79362a06531082b0bf86570d4cea20d28cf905c3)
+
+и определяются остатки регрессии ![e_{t}=y_{t}-{\hat  {y_{t}}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/4348e96088836fc7c3f70bcf6405a8666face8bc).
+
+Далее ранжируются остатки ![e_{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/bf0bd4f3c8809bace7f01662b5e10a1cc4aa2d1d) и переменная ![z_{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/e396fb172660aa223e35c928e2e6985f511d8cc6), от которой предполагается зависимость дисперсии случайных ошибок, и определяется коэффициент ранговой корреляции Спирмена:
+
+![{\hat  {\rho }}=1-{\frac  {6\sum d_{t}^{2}}{n(n^{2}-1)}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/0e888929cafb90492fd1db85e4b38fd57ae93a51)
+
+где ![d_{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/3d8ef37713c9f3f4bec0cf6f81af955876285967) - разность рангов переменных ![e_{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/bf0bd4f3c8809bace7f01662b5e10a1cc4aa2d1d)и ![z_{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/e396fb172660aa223e35c928e2e6985f511d8cc6).
+
+Доказано, что при справедливости нулевой гипотезы (отсутствие гетероскедастичности, в данном случае - равенство нулю *истинного* значения коэффициента ранговой корреляции Спирмена ![\rho ](https://wikimedia.org/api/rest_v1/media/math/render/svg/1f7d439671d1289b6a816e6af7a304be40608d64)) статистика ![{\hat  {\rho }}{\sqrt  {n-1}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/96c51fb184be18f2154515b90c171928fde3e4e7) асимптотически (то есть при достаточно большом ![n](https://wikimedia.org/api/rest_v1/media/math/render/svg/a601995d55609f2d9f5e233e36fbe9ea26011b3b)) имеет стандартное нормальное распределение ![N(0,1)](https://wikimedia.org/api/rest_v1/media/math/render/svg/763663a6c2dbaa4cf12b99c5710e01ff2504f193). Соответственно, если значение этой статистики больше критического значения этого распределения, то гетероскедастичность значима. 
+
+**Тест Голдфелда-Квандта**
+
+В первую очередь, данные упорядочиваются по убыванию независимой переменной Z, относительно которой имеются подозрения на гетероскедастичность.
+
+Далее обычным МНК оценивается исходная регрессионная модель для двух разных выборок — первых и последних *m* наблюдений в данном упорядочении, где ![{\displaystyle m<n/2}](https://wikimedia.org/api/rest_v1/media/math/render/svg/d01960d996f18cca87eedb2e28f120102939b794). Средние *n-2m* наблюдений исключаются из рассмотрения. Тест работает и без исключения средних наблюдений, но в этом случае мощность теста меньше.
+
+Для полученных двух оценок регрессионной модели находят суммы квадратов остатков и рассчитывают F-статистику, равную отношению большей суммы квадратов остатков к меньшей ![{\displaystyle F={\frac {RSS_{1}/(m-k)}{RSS_{2}/(m-k)}}={\frac {RSS_{1}}{RSS_{2}}}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/630e00d4d6b6864275098311492fc26501cc7bee).
+
+Данная статистика при отсутствии гетероскедастичности (и при нормальности распределения ошибок) имеет распределение Фишера ![{\displaystyle F(m-k,m-k)}](https://wikimedia.org/api/rest_v1/media/math/render/svg/e9df1ff69569eb119442ce63a542407e46c23172).
+
+**Тест Уайта**
+
+Пусть имеется линейная регрессия:
+
+![y_{t}=x_{t}^{T}b+\varepsilon _{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/79362a06531082b0bf86570d4cea20d28cf905c3)
+
+Необходимо проверить гетероскедастичность случайных ошибок модели ![\varepsilon ](https://wikimedia.org/api/rest_v1/media/math/render/svg/a30c89172e5b88edbd45d3e2772c7f5e562e5173). Тест использует остатки регрессии, оценённой с помощью обычного метода наименьших квадратов. Для теста оценивается (также обычным МНК) вспомогательная регрессия квадратов этих остатков на все регрессоры (включая константу, даже если её не было в исходной модели), их квадраты и попарные произведения:
+
+![{\displaystyle e_{t}^{2}=a_{0}+a^{T}x_{t}+x_{t}^{T}Ax_{t}+u_{t}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/c3dfb56e84f321d2bf118af5a4514ed21d2cdee8)
+
+![e_{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/bf0bd4f3c8809bace7f01662b5e10a1cc4aa2d1d) — остатки регрессии;
+
+![x_t](https://wikimedia.org/api/rest_v1/media/math/render/svg/f279a30bc8eabc788f3fe81c9cfb674e72e858db) — факторы исходной регрессии;
+
+![{\displaystyle a_{0},a,A}](https://wikimedia.org/api/rest_v1/media/math/render/svg/7379902cca2d667b76ae9513980f1ef1507ff51f) — параметры вспомогательной регрессии — соответственно константа, вектор линейных коэффициентов и матрица коэффициентов при квадратах и попарных произведениях факторов.
+
+![u_{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/ffc45a5286dc4ff8b99c89d5fbf0c0b9760babf1)-случайная ошибка вспомогательной модели.
+
+В данной записи без ограничения общности матрицу ![A](https://wikimedia.org/api/rest_v1/media/math/render/svg/7daff47fa58cdfd29dc333def748ff5fa4c923e3) можно считать треугольной. В другом варианте теста в модель не включаются попарные произведения, тогда матрица ![A](https://wikimedia.org/api/rest_v1/media/math/render/svg/7daff47fa58cdfd29dc333def748ff5fa4c923e3) - диагональная.
+
+В тесте проверяется нулевая гипотеза об отсутствии гетероскедастичности. В таком случае вспомогательная регрессия должна быть незначимой. Для проверки этой гипотезы используется LM-статистика ![{\displaystyle LM=nR^{2}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/e3e9079dcabcbc2c59e6631a974c58878e117667), где ![R^2](https://wikimedia.org/api/rest_v1/media/math/render/svg/5ce07e278be3e058a6303de8359f8b4a4288264a) — коэффициент детерминации вспомогательной регрессии, ![n](https://wikimedia.org/api/rest_v1/media/math/render/svg/a601995d55609f2d9f5e233e36fbe9ea26011b3b)-количество наблюдений. При отсутствии гетероскедастичности данная статистика имеет асимптотическое распределение ![{\displaystyle \chi ^{2}(N-1)}](https://wikimedia.org/api/rest_v1/media/math/render/svg/964c53b060e8f573ed537feb8ffd49bfeed9da44), где ![N](https://wikimedia.org/api/rest_v1/media/math/render/svg/f5e3890c981ae85503089652feb48b191b57aae3) - количество параметров вспомогательной регрессии.
+
+**Тест Глейзера**
+
+С помощью обычного МНК оценивается исходная регрессионная модель
+
+![{\displaystyle y_{t}=x_{t}^{T}b+\varepsilon _{t}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/79362a06531082b0bf86570d4cea20d28cf905c3)
+
+и находятся остатки регрессии ![e_{t}](https://wikimedia.org/api/rest_v1/media/math/render/svg/bf0bd4f3c8809bace7f01662b5e10a1cc4aa2d1d).
+
+Далее для различных значений ![\gamma ](https://wikimedia.org/api/rest_v1/media/math/render/svg/a223c880b0ce3da8f64ee33c4f0010beee400b1a) (обычно начинают с ±0.5,±1,...![{\displaystyle \pm 0.5,\pm 1,...}](https://wikimedia.org/api/rest_v1/media/math/render/svg/981c6528ddfbf09eefbaaeeb1464ecf7f91d3d24)) оценивается (также с помощью обычного МНК) вспомогательная регрессия:
+
+![{\displaystyle |e_{t}|=\alpha +\beta z_{t}^{\gamma }+u_{t}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/87da03d064d729776e65d206fbab9f621c2d2d13)
+
+Для каждого значения ![\gamma ](https://wikimedia.org/api/rest_v1/media/math/render/svg/a223c880b0ce3da8f64ee33c4f0010beee400b1a) проверяется статистическая значимость коэффициента ![\beta ](https://wikimedia.org/api/rest_v1/media/math/render/svg/7ed48a5e36207156fb792fa79d29925d2f7901e8) с помощью стандартного критерия Стьюдента или эквивалентного ему в данном случае F-теста на значимость вспомогательной регрессии в целом. Если для некоторых ![\gamma ](https://wikimedia.org/api/rest_v1/media/math/render/svg/a223c880b0ce3da8f64ee33c4f0010beee400b1a) коэффициент ![\beta ](https://wikimedia.org/api/rest_v1/media/math/render/svg/7ed48a5e36207156fb792fa79d29925d2f7901e8) признаётся значимым (тестовая статистика больше критического значения), то гетероскедастичность данного вида признаётся значимой и выбирается модель с тем значением ![\gamma ](https://wikimedia.org/api/rest_v1/media/math/render/svg/a223c880b0ce3da8f64ee33c4f0010beee400b1a), для которого коэффициент ![\beta ](https://wikimedia.org/api/rest_v1/media/math/render/svg/7ed48a5e36207156fb792fa79d29925d2f7901e8) наиболее значим (с наибольшим значением тестовой статистики).
+
+
 
 
 
